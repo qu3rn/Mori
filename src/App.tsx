@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import './App.css';
+import PixiBackground from './components/PixiBackground';
 
 function App() {
   const [count, setCount] = useState<number>(0);
 
   return (
-    <div className="app">
+    <div className="app" style={{ position: 'relative' }}>
+      {/* Pixi.js canvas – sits behind all other content */}
+      <PixiBackground />
+
       <header className="app-header">
         <h1>Mori</h1>
         <p>React + TypeScript + Vite</p>
