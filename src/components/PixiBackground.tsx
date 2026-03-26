@@ -19,18 +19,26 @@ import { Application, Graphics } from 'pixi.js';
  *    it configurable.
  * ─────────────────────────────────────────────
  */
-export default function PixiBackground() {
+export default function PixiBackground()
+{
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useEffect(() =>
+  {
     const container = containerRef.current;
-    if (!container) return;
+
+    if (!container)
+    {
+      return
+    };
 
     const app = new Application();
 
     let running = true;
+    let initialized = false;
 
-    (async () => {
+    (async () =>
+    {
       await app.init({
         resizeTo: window,
         backgroundAlpha: 0, // transparent – set a hex colour if you prefer
@@ -39,7 +47,10 @@ export default function PixiBackground() {
         resolution: window.devicePixelRatio ?? 1,
       });
 
-      if (!running || !containerRef.current) {
+      initialized = true;
+
+      if (!running || !containerRef.current)
+      {
         app.destroy(true, true);
         return;
       }
@@ -57,7 +68,8 @@ export default function PixiBackground() {
       app.stage.addChild(circle);
 
       let time = 0;
-      app.ticker.add(() => {
+      app.ticker.add(() =>
+      {
         time += 0.02;
         const x = app.screen.width / 2 + Math.cos(time) * 120;
         const y = app.screen.height / 2 + Math.sin(time) * 60;
@@ -70,9 +82,13 @@ export default function PixiBackground() {
       // ─────────────────────────────────────────────────────────────────
     })();
 
-    return () => {
+    return () =>
+    {
       running = false;
-      app.destroy(true, true);
+      if (initialized)
+      {
+        app.destroy(true, true);
+      }
     };
   }, []);
 
