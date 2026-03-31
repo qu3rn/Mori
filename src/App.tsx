@@ -1,26 +1,31 @@
-import { useState } from 'react';
-import './App.css';
-import PixiBackground from './components/PixiBackground';
+import Header from '@/components/layout/Header';
+import Hero from '@/sections/Hero';
+import About from '@/sections/About';
+import Skills from '@/sections/Skills';
+import Experience from '@/sections/Experience';
+import Contact from '@/sections/Contact';
+import GamePlaceholder from '@/sections/GamePlaceholder';
+import { personal } from './data/content';
 
-function App()
+export default function App()
 {
-  const [count, setCount] = useState<number>(0);
-
   return (
-    <div className="app" style={{ position: 'relative' }}>
-      {/* Pixi.js canvas – sits behind all other content */}
-      <PixiBackground />
-      <header className="app-header">
-        <h1>Mori</h1>
-        <p>React + TypeScript + Vite</p>
-      </header>
-      <main className="app-main">
-        <div className="card">
-          <button onClick={() => setCount((c) => c + 1)}>Count: {count}</button>
-        </div>
+    <>
+      <Header />
+      <main>
+        <Hero />
+        <About />
+        <Skills />
+        <Experience />
+        <Contact />
+        <GamePlaceholder />
       </main>
-    </div>
+      <footer className="py-8 px-6 border-t border-zinc-800">
+        <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-zinc-600 text-xs font-mono">© 2026 {personal.name}</span>
+          <span className="text-zinc-700 text-xs font-mono">Built with React + TypeScript + Vite</span>
+        </div>
+      </footer>
+    </>
   );
 }
-
-export default App;
