@@ -40,10 +40,13 @@ export default function Hero() {
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-600">
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-zinc-600 z-10">
         <span className="text-xs font-mono tracking-widest uppercase">Scroll</span>
         <div className="w-px h-8 bg-gradient-to-b from-zinc-600 to-transparent" />
       </div>
+
+      {/* Section fade */}
+      <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none z-10" />
     </section>
   )
 }
