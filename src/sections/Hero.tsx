@@ -1,12 +1,10 @@
 import { personal } from '@/data/content'
-import ConstellationBackground from '@/components/background/ConstellationBackground';
 
 export default function Hero() {
   const [firstName, lastName] = personal.name.split(' ')
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center overflow-hidden">
-      <ConstellationBackground />
+    <section id="hero" className="relative min-h-screen flex items-center">
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-32">
         {personal.available && (

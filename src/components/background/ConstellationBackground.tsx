@@ -4,10 +4,8 @@ import { useConstellationBackground } from './useConstellationBackground'
  * Full-viewport animated background: drifting points connected by lines,
  * with low-opacity geometric triangles forming and dissolving between clusters.
  *
- * Absolutely positioned, pointer-events disabled — never blocks page content.
- *
- * Usage (when ready to integrate):
- *   Replace <PixiBackground /> with <ConstellationBackground /> in Hero.tsx
+ * Fixed-positioned so it spans the entire viewport across all page sections.
+ * pointer-events: none ensures it never intercepts any UI interaction.
  */
 export default function ConstellationBackground() {
   const containerRef = useConstellationBackground()
@@ -16,10 +14,10 @@ export default function ConstellationBackground() {
     <div
       ref={containerRef}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         inset: 0,
-        overflow: 'hidden',
         zIndex: 0,
+        pointerEvents: 'none',
       }}
     />
   )
