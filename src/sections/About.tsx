@@ -21,11 +21,12 @@ export default function About()
 
           {/* Details */}
           <div className="md:col-span-2">
-            <div
-              className="aspect-square bg-zinc-900 border border-zinc-800 rounded-sm mb-8 flex items-center justify-center"
-              style={{ backgroundImage: `url(${personal.photo})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-            >
-              <span className="text-zinc-700 text-sm font-mono">Photo</span>
+            <div className="relative aspect-square bg-zinc-900 rounded-sm mb-8 overflow-hidden ring-1 ring-zinc-800">
+              <img
+                src={personal.photo}
+                alt={personal.name}
+                className="w-full h-full object-cover object-center"
+              />
             </div>
             <div className="space-y-3">
               <DetailRow label="Location" value={personal.location} />

@@ -5,6 +5,7 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
   }
 
   body {
@@ -14,6 +15,11 @@
 
   h1, h2, h3, h4, h5, h6 {
     line-height: 1.2;
+  }
+
+  ::selection {
+    background-color: rgba(200, 98, 42, 0.25);
+    color: #f0f0f0;
   }
 
   a {
@@ -28,14 +34,18 @@
 @layer components {
   .btn-primary {
     @apply inline-flex items-center gap-2 px-6 py-3 bg-accent text-white font-medium
-           text-sm rounded-sm transition-all duration-200
-           hover:bg-accent-light active:scale-95;
+           text-sm tracking-wide rounded-sm transition-all duration-200
+           hover:bg-accent-light active:scale-95 focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2
+           focus-visible:ring-offset-zinc-950;
   }
 
   .btn-outline {
     @apply inline-flex items-center gap-2 px-6 py-3 border border-zinc-700 text-zinc-300
-           font-medium text-sm rounded-sm transition-all duration-200
-           hover:border-zinc-500 hover:text-zinc-100 active:scale-95;
+           font-medium text-sm tracking-wide rounded-sm transition-all duration-200
+           hover:border-zinc-500 hover:text-zinc-100 active:scale-95 focus-visible:outline-none
+           focus-visible:ring-2 focus-visible:ring-zinc-600 focus-visible:ring-offset-2
+           focus-visible:ring-offset-zinc-950;
   }
 
   .section {

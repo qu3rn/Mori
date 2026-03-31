@@ -43,9 +43,11 @@ export default function Experience() {
             <a
               key={project.id}
               href={project.link}
-              className="group p-8 bg-zinc-900 border border-zinc-800 rounded-sm
-                         hover:border-zinc-700 transition-all"
+              className="group relative p-8 bg-zinc-900 border border-zinc-800 rounded-sm overflow-hidden
+                         hover:border-zinc-600 transition-all duration-200"
             >
+              {/* Top accent reveal */}
+              <div className="absolute inset-x-0 top-0 h-px bg-accent scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left" />
               <h3 className="text-zinc-100 font-semibold text-lg mb-3 group-hover:text-accent transition-colors">
                 {project.title}
               </h3>
