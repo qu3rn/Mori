@@ -1,14 +1,17 @@
+import avatar from '@/assets/avatar.jpg';
+
 export const personal = {
   name: 'Maciej Wlazlo',
   role: 'Senior Frontend Developer',
   tagline:
     'I craft polished, performant web applications with React, TypeScript, and a keen eye for detail.',
-  email: 'hello@alexmorgan.dev',
-  github: 'https://github.com',
-  linkedin: 'https://linkedin.com',
-  location: 'Berlin, Germany',
+  email: 'carenauur@gmail.com',
+  github: 'https://github.com/qu3rn',
+  linkedin: 'https://www.linkedin.com/in/maciej-wlaz%C5%82o-v1/',
+  location: 'Wroclaw, Poland',
+  photo: avatar,
   available: true,
-}
+};
 
 export const about = {
   bio: [
@@ -16,7 +19,7 @@ export const about = {
     'My work spans everything from complex design systems to high-traffic production applications. I care deeply about code quality, user experience, and the craft of building software.',
     "When I'm not shipping features, I'm exploring creative coding, contributing to open source, and building things for the web.",
   ],
-}
+};
 
 export const skills = [
   { category: 'Core', items: ['React', 'TypeScript', 'JavaScript', 'HTML', 'CSS'] },
@@ -30,7 +33,7 @@ export const skills = [
   },
   { category: 'Tools', items: ['Git', 'GitHub Actions', 'Docker', 'Figma', 'Storybook'] },
   { category: 'Creative', items: ['PixiJS', 'Three.js', 'WebGL', 'Canvas API'] },
-]
+];
 
 export const experience = [
   {
@@ -60,7 +63,7 @@ export const experience = [
       'Joined as first frontend hire. Shipped the product from zero to launch, establishing frontend foundations, CI/CD, and design system.',
     tags: ['React', 'TypeScript', 'CSS Modules', 'Storybook'],
   },
-]
+];
 
 export const projects = [
   {
@@ -79,4 +82,4 @@ export const projects = [
     tags: ['React', 'D3', 'WebSockets'],
     link: '#',
   },
-]
+];

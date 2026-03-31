@@ -1,27 +1,32 @@
-import { useState, useEffect } from 'react'
+import { personal } from '@/data/content';
+import getNameInitials from '@/utility/GetNameInitials';
+import { useState, useEffect } from 'react';
 
 const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Skills', href: '#skills' },
   { label: 'Experience', href: '#experience' },
   { label: 'Contact', href: '#contact' },
-]
+];
 
-export default function Header() {
-  const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+export default function Header()
+{
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const nameInitials = getNameInitials(personal.name);
+
+  useEffect(() =>
+  {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-zinc-950/90 backdrop-blur-sm border-b border-zinc-800/60' : ''
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-zinc-950/90 backdrop-blur-sm border-b border-zinc-800/60' : ''
+        }`}
     >
       <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
         {/* Logo */}
@@ -29,7 +34,7 @@ export default function Header() {
           href="#hero"
           className="text-zinc-50 font-bold text-lg tracking-tight hover:text-accent transition-colors"
         >
-          AM<span className="text-accent">.</span>
+          {nameInitials}<span className="text-accent">.</span>
         </a>
 
         {/* Desktop nav */}
@@ -80,5 +85,5 @@ export default function Header() {
         </div>
       )}
     </header>
-  )
+  );
 }
