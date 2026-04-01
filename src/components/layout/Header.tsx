@@ -43,7 +43,7 @@ export default function Header()
             <a
               key={href}
               href={href}
-              className="text-zinc-400 text-sm hover:text-zinc-100 transition-colors"
+              className={`text-zinc-400 text-sm hover:text-zinc-100 transition-colors ${scrolled ? '' : 'cursor-none'}`}
             >
               {label}
             </a>

@@ -2,6 +2,80 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Custom Scrollbar ────────────────────────────────────────────────────────
+   Thin, monochrome-first. Earthy orange only on hover / active interaction.
+   WebKit (Chrome, Edge, Safari) and Firefox are both covered.
+   ────────────────────────────────────────────────────────────────────────── */
+
+::-webkit-scrollbar {
+  width: 3px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a; /* zinc-800 — visible but unobtrusive */
+  border-radius: 0;    /* geometric, not rounded */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c8622a; /* accent — earthy orange on interaction */
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: #c8622a;
+}
+
+/* Firefox */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #27272a transparent;
+}
+
+/* ─── Active Section Glow ─────────────────────────────────────────────────────
+   A very restrained warm radial gradient is revealed on the currently active
+   section. Sections below hero need `position: relative; isolation: isolate`
+   so the ::before overlay stacks correctly behind their content.
+   ────────────────────────────────────────────────────────────────────────── */
+
+#about,
+#skills,
+#experience,
+#contact,
+#game {
+  position: relative;
+  isolation: isolate; /* creates a scoped stacking context for the ::before */
+}
+
+#about::before,
+#skills::before,
+#experience::before,
+#contact::before,
+#game::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 50% 20%,
+    rgba(200, 98, 42, 0.055) 0%,
+    transparent 65%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 900ms ease;
+  z-index: -1; /* behind section content, in front of section background */
+}
+
+main[data-active-section='about']      #about::before,
+main[data-active-section='skills']     #skills::before,
+main[data-active-section='experience'] #experience::before,
+main[data-active-section='contact']    #contact::before,
+main[data-active-section='game']       #game::before {
+  opacity: 1;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
