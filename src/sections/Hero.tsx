@@ -40,7 +40,7 @@ export default function Hero()
           <a href="#experience" className="btn-primary">
             View Work
           </a>
-          <a href="#contact" className="btn-outline">
+          <a href="#contact" className="btn-outline cursor-none">
             Get in Touch
           </a>
         </div>
