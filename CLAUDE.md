@@ -143,3 +143,26 @@ The orange click burst should feel:
 - geometric
 - refined
 - energetic but restrained
+
+# Scrollbar Design
+
+Use a custom premium scrollbar that matches the portfolio aesthetic.
+
+Requirements:
+- thin and subtle
+- geometric and minimal
+- monochrome-first
+- visually consistent with the hero background and overall design
+- elegant rather than decorative
+
+Style:
+- dark low-contrast track
+- slim thumb in soft white or light gray
+- very subtle hover feedback
+- restrained earthy orange accent only during hover or active interaction
+- avoid thick rounded playful styles
+- avoid flashy glow or aggressive color usage
+
+Design intent:
+- the scrollbar should feel refined, modern, technical, and premium
+- it should be visible enough to feel intentional, but subtle enough not to draw attention
