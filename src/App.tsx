@@ -6,16 +6,21 @@ import Experience from '@/sections/Experience';
 import Contact from '@/sections/Contact';
 import GamePlaceholder from '@/sections/GamePlaceholder';
 import ConstellationBackground from '@/components/background/ConstellationBackground';
+import SectionIndicator from '@/components/ui/SectionIndicator';
+import { useScrollState } from '@/hooks/useScrollState';
 import { personal } from './data/content';
 
 export default function App()
 {
+  const { activeSection } = useScrollState();
+
   return (
     <>
       <div className="relative z-10" >
         <ConstellationBackground />
+        <SectionIndicator active={activeSection} />
         <Header />
-        <main>
+        <main data-active-section={activeSection}>
           <Hero />
           <About />
           <Skills />

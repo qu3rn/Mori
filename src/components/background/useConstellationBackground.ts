@@ -2,6 +2,7 @@ import { useEffect, useRef, type RefObject } from 'react'
 import { Application, Graphics } from 'pixi.js'
 import { createPoints, updatePoints, buildConnections, buildTriangles } from './particleSystem'
 import { drawScene } from './constellationScene'
+import { scrollSignal } from '@/utility/scrollSignal'
 import type { SceneConfig } from './types'
 
 // ─── Config presets ────────────────────────────────────────────────────────────
@@ -91,7 +92,15 @@ export function useConstellationBackground(): RefObject<HTMLDivElement | null> {
 
       // Main animation loop
       app.ticker.add((ticker) => {
-        updatePoints(points, app.screen.width, app.screen.height, ticker.deltaTime)
+        // Decay scroll velocity each frame for smooth natural falloff.
+        // The scroll listener peaks the value; the ticker smoothly brings it to rest.
+        scrollSignal.velocity *= 0.90
+
+        // Apply a gentle speed boost while the user is scrolling.
+        // Max multiplier is 2.5× — enough to feel alive without becoming chaotic.
+        const speedBoost = 1 + scrollSignal.velocity * 1.5
+
+        updatePoints(points, app.screen.width, app.screen.height, ticker.deltaTime * speedBoost)
         const connections = buildConnections(points, config.connectionDistance)
         const triangles = buildTriangles(points, config.shapeDistance)
         drawScene(gfx, points, connections, triangles, config)
