@@ -68,3 +68,38 @@ src/
   sections/         # page sections
   styles/           # global + variables
   utility/          # helpers
+  ```
+  
+## ⚙️ Tech Stack
+React
+TypeScript
+Vite
+(planned) PixiJS for advanced rendering
+
+## 🎯 Focus
+
+This project highlights:
+
+- frontend architecture over boilerplate
+- clarity over complexity
+- flexibility over rigidity
+
+It is designed to evolve:
+
+- interactive elements
+- game systems
+- richer visual layers
+
+## 🚀 Philosophy
+
+I treat even a portfolio as a product, not a static page.
+
+That means:
+
+clean code matters
+structure matters
+performance matters
+
+## 📌 Status
+
+Active => continuously evolving alongside new ideas and systems.
