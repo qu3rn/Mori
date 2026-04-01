@@ -94,6 +94,57 @@
   to   { opacity: 0; }
 }
 
+/* ─── Weather Chip ────────────────────────────────────────────────────────────
+   Phases and animations for WeatherChip.tsx.
+   CSS custom properties --f-dx / --f-dy / --f-rot are set inline per-fragment.
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Enter: slide up slightly from below + fade in */
+.wchip-enter {
+  animation: wchip-enter 0.4s cubic-bezier(0.2, 0, 0.4, 1) both;
+}
+@keyframes wchip-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Manual close: quick fade + slight drop */
+.wchip-exit-close {
+  animation: wchip-exit-close 0.28s ease-out both;
+  pointer-events: none;
+}
+@keyframes wchip-exit-close {
+  from { opacity: 1; transform: translateY(0);   }
+  to   { opacity: 0; transform: translateY(6px); }
+}
+
+/* Auto-disintegrate: chip box collapses while fragments scatter */
+.wchip-disintegrate {
+  animation: wchip-disintegrate 0.5s cubic-bezier(0.4, 0, 1, 1) both;
+  pointer-events: none;
+}
+@keyframes wchip-disintegrate {
+  0%   { opacity: 1; transform: scale(1);    }
+  100% { opacity: 0; transform: scale(0.88); }
+}
+
+/* Fragment scatter — translate + rotate + fade using per-fragment CSS vars */
+.wchip-fragment {
+  position: absolute;
+  pointer-events: none;
+  animation: wchip-fragment-scatter 0.72s cubic-bezier(0.15, 0, 0.7, 1) both;
+}
+@keyframes wchip-fragment-scatter {
+  0%   {
+    transform: translate(0, 0) rotate(0deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(var(--f-dx), var(--f-dy)) rotate(var(--f-rot));
+    opacity: 0;
+  }
+}
+
 /* ─── Custom Scrollbar ────────────────────────────────────────────────────────
    Thin, monochrome-first. Earthy orange only on hover / active interaction.
    WebKit (Chrome, Edge, Safari) and Firefox are both covered.

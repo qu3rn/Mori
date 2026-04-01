@@ -166,3 +166,63 @@ Style:
 Design intent:
 - the scrollbar should feel refined, modern, technical, and premium
 - it should be visible enough to feel intentional, but subtle enough not to draw attention
+
+# Weather Chip
+
+Add a premium minimal weather chip in the bottom-right corner of the page.
+
+## Timing
+
+- The chip should appear with a small delay after the loader closes
+- Delay should be between 300ms and 600ms
+- The delay should be configurable
+- The chip should not appear before the loader fully finishes
+
+## Content
+
+The chip should display one of three short English messages:
+
+1. "Today feels almost Californian — enjoy the visit."
+2. "Maybe it’s not perfect, but at least it’s not raining."
+3. "Well, at least the website is pretty."
+
+## Data Source
+
+Use Open-Meteo weather data.
+
+Important:
+- If the API request only includes hourly temperature, then the system cannot reliably infer sunshine or rain
+- If rain/sun-based messaging is required, extend the request with precipitation and weather condition fields
+- Keep weather interpretation logic simple, explicit, and isolated
+
+## Interaction
+
+- The chip must include a small close "X" button
+- The chip can be dismissed manually
+- If not dismissed, it should automatically disintegrate after 3 seconds
+- The disintegration should break the chip into small subtle geometric fragments
+- The effect must feel elegant, restrained, and premium
+
+## Design
+
+- premium minimalism
+- monochrome base
+- restrained earthy orange accents
+- clean spacing
+- subtle contrast
+- refined, quiet motion
+- bottom-right placement
+- never distracting
+
+## Architecture
+
+Separate:
+- API fetching
+- weather interpretation
+- message selection
+- post-loader delayed appearance
+- manual dismiss
+- timed auto-disintegration
+- chip animation rendering
+
+Keep timing values configurable and easy to tune.
