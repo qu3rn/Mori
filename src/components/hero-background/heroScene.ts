@@ -1,6 +1,7 @@
 import type { Graphics } from 'pixi.js'
-import type { Snowflake, Fragment, SnowConnection, SnowConfig } from './types'
+import type { Snowflake, Fragment, BurstParticle, SnowConnection, SnowConfig } from './types'
 import { getTrianglePoints } from './snowflakeSystem'
+import { drawCursor, drawBurst } from './cursorSystem'
 
 /** Matches the portfolio accent colour (#c8622a). */
 const ACCENT = 0xc8622a
@@ -23,20 +24,26 @@ function lerpColor(a: number, b: number, t: number): number {
  * Redraw the hero scene for the current frame.
  *
  * Draw order (back to front):
- *   1. Connection lines
- *   2. Disintegration fragments
- *   3. Untinted snowflakes (batched — single stroke call)
- *   4. Tinted snowflakes  (one stroke call each; in practice only one at a time)
+ *   1. Connection lines       — faint static lines between nearby flakes
+ *   2. Snowflake fragments    — triangle shards from disintegration
+ *   3. Untinted snowflakes    — white, single batched stroke call
+ *   4. Tinted snowflakes      — orange-blended, one stroke call each
+ *   5. Click burst shards     — orange radial lines, one stroke call each
+ *   6. X cursor               — white, on top of everything, single stroke call
  *
- * Keeping untinted flakes in a single batched stroke is the primary GPU optimisation.
- * Tinted and per-fragment stroke calls are rare / brief enough that overhead is negligible.
+ * The cursor and burst are drawn only when `cursorVisible` is true
+ * (i.e., not a touch device and mouse is within canvas bounds).
  */
 export function drawHeroScene(
   gfx: Graphics,
   flakes: Snowflake[],
   fragments: Fragment[],
+  burst: BurstParticle[],
   connections: SnowConnection[],
   config: SnowConfig,
+  cursorX: number,
+  cursorY: number,
+  cursorVisible: boolean,
 ): void {
   gfx.clear()
 
@@ -50,8 +57,6 @@ export function drawHeroScene(
   }
 
   // ── 2. Disintegration fragments ─────────────────────────────────────────────
-  // Each fragment has a unique alpha so they cannot share a single stroke call.
-  // Fragment counts are small (≤ ~50) and short-lived so individual calls are fine.
   for (const frag of fragments) {
     const [p0, p1, p2] = getTrianglePoints(frag)
     gfx.moveTo(p0.x, p0.y)
@@ -73,11 +78,8 @@ export function drawHeroScene(
   gfx.stroke({ color: config.color, alpha: config.alpha, width: 1 })
 
   // ── 4. Tinted snowflakes — blended colour, separate stroke per flake ────────
-  // Only the flake nearest the cursor accumulates meaningful tint;
-  // others decay quickly so this loop rarely executes more than once.
   for (const sf of flakes) {
     if (sf.tint <= 0.01) continue
-    // Cap tint blend at 0.85 — noticeable orange, still restrained.
     const blendedColor = lerpColor(config.color, ACCENT, sf.tint * 0.85)
     const [p0, p1, p2] = getTrianglePoints(sf)
     gfx.moveTo(p0.x, p0.y)
@@ -89,5 +91,12 @@ export function drawHeroScene(
       alpha: config.alpha + sf.tint * 0.22,
       width: 1.2,
     })
+  }
+
+  // ── 5. Click burst shards + 6. X cursor ────────────────────────────────────
+  // Both are cursor-driven so skip on touch devices / out-of-canvas mouse.
+  if (cursorVisible) {
+    drawBurst(gfx, burst)
+    drawCursor(gfx, cursorX, cursorY)
   }
 }

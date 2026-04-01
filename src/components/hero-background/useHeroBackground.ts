@@ -10,8 +10,9 @@ import {
   lerpSnowflakeTints,
 } from './snowflakeSystem'
 import { spawnFragments, updateFragments } from './fragmentSystem'
+import { spawnBurst, updateBurst } from './cursorSystem'
 import { drawHeroScene } from './heroScene'
-import type { Fragment, SnowConfig } from './types'
+import type { Fragment, BurstParticle, SnowConfig } from './types'
 
 // ─── Config ────────────────────────────────────────────────────────────────────
 
@@ -43,17 +44,21 @@ function resolveConfig(width: number): SnowConfig {
   return BASE
 }
 
+// ─── Touch detection ───────────────────────────────────────────────────────────
+// Cursor features (X shape, click burst, body cursor override) are disabled on
+// touch devices — there is no persistent pointer position to track.
+const IS_TOUCH = typeof window !== 'undefined' &&
+  ('ontouchstart' in window || navigator.maxTouchPoints > 0)
+
 // ─── Hook ──────────────────────────────────────────────────────────────────────
 
 /**
- * Manages a PixiJS Application that renders falling triangular snowflakes with
- * connecting lines, mouse repulsion, hover tint, click disintegration, and
- * auto-disintegration at the lower third of the hero section.
+ * Manages the PixiJS hero background: drifting snowflakes, connections,
+ * hover tint, click/auto disintegration, and (on non-touch devices) a custom
+ * X cursor with an orange click burst.
  *
- * Event handlers are set up AFTER the canvas is mounted so that
- * getBoundingClientRect correctly converts viewport → canvas coordinates.
- *
- * Returns a ref to attach to the container div.
+ * Event handlers are registered AFTER the canvas is mounted so that
+ * getBoundingClientRect() provides correct viewport → canvas translation.
  */
 export function useHeroBackground(): RefObject<HTMLDivElement | null> {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -68,7 +73,10 @@ export function useHeroBackground(): RefObject<HTMLDivElement | null> {
     let initialized = false
     let cleanupEvents: (() => void) | null = null
     let cleanupResize: (() => void) | null = null
+    let cleanupCursor: (() => void) | null = null
+
     let fragments: Fragment[] = []
+    let burst: BurstParticle[] = []
 
     ;(async () => {
       await app.init({
@@ -91,27 +99,44 @@ export function useHeroBackground(): RefObject<HTMLDivElement | null> {
       app.canvas.style.pointerEvents = 'none'
       mountNode.appendChild(app.canvas)
 
-      // ── Event setup (after canvas is mounted) ────────────────────────────────
-      // getBoundingClientRect translates viewport coordinates to canvas-local
-      // coordinates, keeping interactions correct regardless of scroll or header
-      // height. Canvas rect is recomputed per event (cheap — browsers cache it).
+      // ── Cursor: hide OS pointer while inside the hero canvas ─────────────────
+      // body cursor is toggled per-mousemove so it restores automatically if the
+      // user moves to another section. Interactive children (links, buttons) keep
+      // their UA-defined cursor via element-level CSS, which takes precedence over
+      // the inherited body value.
+      if (!IS_TOUCH) {
+        cleanupCursor = () => { document.body.style.cursor = '' }
+      }
+
+      // ── Coordinate translation ────────────────────────────────────────────────
+      // getBoundingClientRect converts viewport clientX/Y to canvas-local pixels.
+      // Recomputed per event (cheap) so scroll and layout shifts are handled too.
       const toCanvas = (clientX: number, clientY: number) => {
         const rect = app.canvas.getBoundingClientRect()
         return { x: clientX - rect.left, y: clientY - rect.top }
       }
 
+      const isInCanvas = (x: number, y: number) =>
+        x >= 0 && x <= app.screen.width && y >= 0 && y <= app.screen.height
+
+      // ── Events ───────────────────────────────────────────────────────────────
       const onMouseMove = (e: MouseEvent) => {
-        mouseRef.current = toCanvas(e.clientX, e.clientY)
+        const pos = toCanvas(e.clientX, e.clientY)
+        mouseRef.current = pos
+        if (!IS_TOUCH) {
+          document.body.style.cursor = isInCanvas(pos.x, pos.y) ? 'none' : ''
+        }
       }
+
       const onMouseLeave = () => {
         mouseRef.current = { x: -9999, y: -9999 }
+        if (!IS_TOUCH) document.body.style.cursor = ''
       }
 
       const clickTarget = { x: 0, y: 0, pending: false }
       const onClick = (e: MouseEvent) => {
         const pos = toCanvas(e.clientX, e.clientY)
-        // Only react to clicks that land within the hero canvas bounds
-        if (pos.x >= 0 && pos.x <= app.screen.width && pos.y >= 0 && pos.y <= app.screen.height) {
+        if (isInCanvas(pos.x, pos.y)) {
           clickTarget.x = pos.x
           clickTarget.y = pos.y
           clickTarget.pending = true
@@ -138,6 +163,7 @@ export function useHeroBackground(): RefObject<HTMLDivElement | null> {
         config = resolveConfig(app.screen.width)
         flakes = createSnowflakes(config, app.screen.width, app.screen.height)
         fragments = []
+        burst = []
       }
       window.addEventListener('resize', onResize, { passive: true })
       cleanupResize = () => window.removeEventListener('resize', onResize)
@@ -146,11 +172,17 @@ export function useHeroBackground(): RefObject<HTMLDivElement | null> {
       app.ticker.add((ticker) => {
         time += ticker.deltaMS
         const dt = ticker.deltaTime
+        const { x: mx, y: my } = mouseRef.current
+        const cursorVisible = !IS_TOUCH && isInCanvas(mx, my)
 
-        // 1. Click: disintegrate nearest snowflake (no distance limit — any click
-        //    within the canvas area always hits the closest flake)
+        // 1. Click: spawn burst at click point + disintegrate nearest snowflake
         if (clickTarget.pending) {
           clickTarget.pending = false
+          // Burst always fires at click point regardless of snowflake proximity
+          if (!IS_TOUCH) {
+            burst.push(...spawnBurst(clickTarget.x, clickTarget.y))
+          }
+          // Snowflake disintegration: no distance limit — any in-canvas click hits closest
           const hit = findNearestSnowflake(flakes, clickTarget.x, clickTarget.y, Infinity)
           if (hit !== null) {
             fragments.push(...spawnFragments(hit, config))
@@ -159,31 +191,34 @@ export function useHeroBackground(): RefObject<HTMLDivElement | null> {
         }
 
         // 2. Physics
-        applyMouseRepulsion(flakes, mouseRef.current.x, mouseRef.current.y, config)
+        applyMouseRepulsion(flakes, mx, my, config)
         const toBreak = updateSnowflakes(flakes, app.screen.width, app.screen.height, dt, time, config)
 
-        // 3. Auto-disintegrate flakes that crossed the break threshold
+        // 3. Auto-disintegrate flakes at break threshold
         for (const sf of toBreak) {
           fragments.push(...spawnFragments(sf, config))
           flakes.splice(flakes.indexOf(sf), 1)
         }
 
-        // 4. Respawn to maintain count (one per frame to avoid top-edge bursts)
+        // 4. Respawn (one per frame to avoid top-edge bursts)
         if (flakes.length < config.count) {
           flakes.push(spawnSnowflake(config, app.screen.width))
         }
 
-        // 5. Hover tint — search within connectionDistance for a more generous hit area
-        const nearest = findNearestSnowflake(flakes, mouseRef.current.x, mouseRef.current.y, config.connectionDistance)
+        // 5. Hover tint
+        const nearest = findNearestSnowflake(flakes, mx, my, config.connectionDistance)
         lerpSnowflakeTints(flakes, nearest, dt)
 
-        // 6. Fragment lifecycle
+        // 6. Fragment + burst lifecycle
         updateFragments(fragments, dt)
         fragments = fragments.filter(f => f.alpha > 0.01)
 
+        updateBurst(burst, dt)
+        burst = burst.filter(p => p.alpha > 0.01)
+
         // 7. Render
         const connections = buildSnowConnections(flakes, config.connectionDistance)
-        drawHeroScene(gfx, flakes, fragments, connections, config)
+        drawHeroScene(gfx, flakes, fragments, burst, connections, config, mx, my, cursorVisible)
       })
     })()
 
@@ -191,6 +226,7 @@ export function useHeroBackground(): RefObject<HTMLDivElement | null> {
       running = false
       cleanupEvents?.()
       cleanupResize?.()
+      cleanupCursor?.()
       if (initialized) {
         app.destroy(true, true)
       }

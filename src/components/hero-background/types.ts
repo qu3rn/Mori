@@ -47,6 +47,23 @@ export interface Fragment extends TriangularParticle {
   fadeRate: number
 }
 
+/**
+ * A single shard of the orange click-burst.
+ * Travels outward from the click point and fades within ~1 second.
+ */
+export interface BurstParticle {
+  x: number
+  y: number
+  /** Direction of travel (radians). */
+  angle: number
+  /** Current speed (px/tick at 60 fps). */
+  speed: number
+  /** Visible shard length in px (comet-style: tail trails behind the head). */
+  length: number
+  alpha: number
+  fadeRate: number
+}
+
 export interface SnowConfig {
   count: number
   minSize: number
