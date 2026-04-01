@@ -9,6 +9,7 @@ import ConstellationBackground from '@/components/background/ConstellationBackgr
 import SectionIndicator from '@/components/ui/SectionIndicator';
 import LoaderOverlay from '@/components/ui/LoaderOverlay';
 import LoaderAnimation from '@/components/ui/LoaderAnimation';
+import WeatherChip from '@/components/weather/WeatherChip';
 import { useScrollState } from '@/hooks/useScrollState';
 import { useLoader } from '@/hooks/useLoader';
 import { personal } from './data/content';
@@ -16,13 +17,14 @@ import { personal } from './data/content';
 export default function App()
 {
   const { activeSection } = useScrollState();
-  const { visible: loaderVisible } = useLoader();
+  const { visible: loaderVisible, done: loaderDone } = useLoader();
 
   return (
     <>
       <LoaderOverlay visible={loaderVisible}>
         <LoaderAnimation />
       </LoaderOverlay>
+      <WeatherChip loaderDone={loaderDone} />
       <div className="relative z-10" >
         <ConstellationBackground />
         <SectionIndicator active={activeSection} />
