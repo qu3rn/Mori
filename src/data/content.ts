@@ -43,16 +43,16 @@ export const skills = [
 export const experience = [
   {
     id: '1',
-    company: 'Acme Corp',
+    company: 'Nexus Polska',
     role: 'Senior Frontend Engineer',
     period: '2022 – Present',
     description:
       'Led frontend architecture for a platform serving 500k+ users. Migrated legacy codebase to React 18 + TypeScript, reducing bundle size by 40%.',
-    tags: ['React', 'TypeScript', 'GraphQL', 'Design System'],
+    tags: ['React', 'TypeScript', 'MySql', 'Design System'],
   },
   {
     id: '2',
-    company: 'BuilderHub',
+    company: 'Sopchy',
     role: 'Frontend Developer',
     period: '2019 – 2022',
     description:
@@ -61,7 +61,7 @@ export const experience = [
   },
   {
     id: '3',
-    company: 'StartupLab',
+    company: 'Freeroam bussines projects',
     role: 'Frontend Developer',
     period: '2017 – 2019',
     description:
