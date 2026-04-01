@@ -1,4 +1,9 @@
 import avatar from '@/assets/avatar.jpg';
+import forest from '@/assets/forest.jpg';
+
+export const backgrounds = {
+  forest: forest
+};
 
 export const personal = {
   name: 'Maciej Wlazlo',

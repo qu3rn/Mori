@@ -1,11 +1,20 @@
-import { personal } from '@/data/content'
+import HeroBackground from '@/components/hero-background/HeroBackground';
+import { backgrounds, personal } from '@/data/content';
 
-export default function Hero() {
-  const [firstName, lastName] = personal.name.split(' ')
+export default function Hero()
+{
+  const [firstName, lastName] = personal.name.split(' ');
 
   return (
-    <section id="hero" className="relative min-h-screen flex items-center">
-
+    <section id="hero" className="relative min-h-screen flex items-center" style={{
+      backgroundImage: `url(${backgrounds.forest})`,
+      backgroundColor: 'rgba(20, 20, 20, 0.95)',
+      backgroundSize: 'fill',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundBlendMode: 'darken'
+    }}>
+      <HeroBackground />
       <div className="relative z-10 max-w-5xl mx-auto px-6 py-32">
         {personal.available && (
           <p className="inline-flex items-center gap-2 text-accent text-xs font-mono tracking-[0.2em] uppercase mb-8">
@@ -46,5 +55,5 @@ export default function Hero() {
       {/* Section fade */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none z-10" />
     </section>
-  )
+  );
 }
