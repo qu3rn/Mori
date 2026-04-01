@@ -2,6 +2,98 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ─── Loader Animation ────────────────────────────────────────────────────────
+   All loader classes live here so the overlay component stays logic-only.
+
+   Timing contract (matches LoaderAnimation.tsx comments):
+     0.05s  corners draw
+     0.25s  X arm 1 draws   (0.65s duration)
+     0.45s  X arm 2 draws   (0.65s duration)
+     0.85s  orange dot pulse
+     0.90s  monogram fades in
+     ∞      ambient glow breathes
+     on exit: .loader-exiting → 0.7s fade out
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* X lines — stroke-dasharray matches line length ≈ 73.5 px (viewBox units) */
+.loader-x-line {
+  stroke: #e4e4e7; /* zinc-200 */
+  stroke-width: 0.7;
+  fill: none;
+  stroke-linecap: square;
+  stroke-dasharray: 75;
+}
+.loader-x-line-1 {
+  stroke-dashoffset: 75;
+  animation: loader-draw-line 0.65s cubic-bezier(0.4, 0, 0.2, 1) 0.25s both;
+}
+.loader-x-line-2 {
+  stroke-dashoffset: 75;
+  animation: loader-draw-line 0.65s cubic-bezier(0.4, 0, 0.2, 1) 0.45s both;
+}
+@keyframes loader-draw-line {
+  from { stroke-dashoffset: 75; }
+  to   { stroke-dashoffset: 0;  }
+}
+
+/* Corner crosshair ticks — each path is 8 + 8 = 16 viewBox units */
+.loader-corner {
+  stroke: #3f3f46; /* zinc-700 */
+  stroke-width: 0.6;
+  fill: none;
+  stroke-linecap: square;
+  stroke-dasharray: 18;
+  stroke-dashoffset: 18;
+  animation: loader-draw-corner 0.4s ease-out 0.05s both;
+}
+@keyframes loader-draw-corner {
+  from { stroke-dashoffset: 18; }
+  to   { stroke-dashoffset: 0;  }
+}
+
+/* Ambient orange glow — very faint, slow breathe */
+.loader-glow-rect {
+  opacity: 0;
+  animation: loader-glow-breathe 2.4s ease-in-out 0.1s infinite;
+}
+@keyframes loader-glow-breathe {
+  0%, 100% { opacity: 0.45; }
+  50%       { opacity: 1;    }
+}
+
+/* Orange center pulse — one-shot expand-and-fade after X is drawn */
+.loader-pulse-dot {
+  fill: #c8622a;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: loader-dot-pulse 1.2s ease-out 0.85s both;
+}
+@keyframes loader-dot-pulse {
+  0%   { transform: scale(1);  opacity: 0.9; }
+  40%  { transform: scale(10); opacity: 0.4; }
+  100% { transform: scale(20); opacity: 0;   }
+}
+
+/* Monogram text fade-in */
+.loader-label {
+  opacity: 0;
+  animation: loader-fade-in-up 0.5s ease-out 0.90s both;
+}
+@keyframes loader-fade-in-up {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+
+/* Overlay exit — applied when visible flips false */
+.loader-exiting {
+  animation: loader-exit 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+  pointer-events: none;
+}
+@keyframes loader-exit {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
 /* ─── Custom Scrollbar ────────────────────────────────────────────────────────
    Thin, monochrome-first. Earthy orange only on hover / active interaction.
    WebKit (Chrome, Edge, Safari) and Firefox are both covered.

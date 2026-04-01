@@ -7,15 +7,22 @@ import Contact from '@/sections/Contact';
 import GamePlaceholder from '@/sections/GamePlaceholder';
 import ConstellationBackground from '@/components/background/ConstellationBackground';
 import SectionIndicator from '@/components/ui/SectionIndicator';
+import LoaderOverlay from '@/components/ui/LoaderOverlay';
+import LoaderAnimation from '@/components/ui/LoaderAnimation';
 import { useScrollState } from '@/hooks/useScrollState';
+import { useLoader } from '@/hooks/useLoader';
 import { personal } from './data/content';
 
 export default function App()
 {
   const { activeSection } = useScrollState();
+  const { visible: loaderVisible } = useLoader();
 
   return (
     <>
+      <LoaderOverlay visible={loaderVisible}>
+        <LoaderAnimation />
+      </LoaderOverlay>
       <div className="relative z-10" >
         <ConstellationBackground />
         <SectionIndicator active={activeSection} />
