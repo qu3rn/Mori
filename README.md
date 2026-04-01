@@ -1,6 +1,6 @@
-# Showcase Landing Page
+# Showcase
 
-This repository contains my personal **portfolio landing page**, built to showcase my experience as a **Senior React / Frontend Developer**.
+This repository contains my personal **showcase landing page**, built to showcase my experience as a **Senior React / Frontend Developer**.
 
 The goal of this project is not just presentation, but demonstrating:
 - strong architectural thinking
