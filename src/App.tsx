@@ -12,8 +12,8 @@ export default function App()
 {
   return (
     <>
-      <ConstellationBackground />
-      <div className="relative z-10">
+      <div className="relative z-10" >
+        <ConstellationBackground />
         <Header />
         <main>
           <Hero />
