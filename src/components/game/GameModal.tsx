@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 // import Game from './Game'
 import { Game } from 'void-protocol';
+import { useElementSize } from '../../hooks/useElementSize';
 
 interface Props
 {
@@ -19,6 +20,8 @@ interface Props
  */
 export default function GameModal({ onClose }: Props)
 {
+    const { ref: gameAreaRef, size: gameSize } = useElementSize<HTMLDivElement>();
+
     // Escape key + body scroll lock
     useEffect(() =>
     {
@@ -39,7 +42,7 @@ export default function GameModal({ onClose }: Props)
     {
         try
         {
-            return <Game />;
+            return <Game width={gameSize?.width} height={gameSize?.height} />;
         }
         catch (error)
         {
@@ -101,7 +104,7 @@ export default function GameModal({ onClose }: Props)
                 </div>
 
                 {/* ── Game area ── */}
-                <div className="flex-1 border border-zinc-800/60 overflow-hidden relative">
+                <div ref={gameAreaRef} className="flex-1 border border-zinc-800/60 overflow-hidden relative">
                     {/* Dot-grid backdrop matching the preview window */}
                     <div
                         className="absolute inset-0 pointer-events-none"
