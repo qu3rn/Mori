@@ -108,6 +108,19 @@
   to   { opacity: 1; transform: translateY(0);    }
 }
 
+/* ─── Game Modal ─────────────────────────────────────────────────────────────
+   Simple fade-in for the full-screen game overlay.
+   ────────────────────────────────────────────────────────────────────────── */
+
+.game-modal-enter {
+  animation: game-modal-enter 0.25s cubic-bezier(0.2, 0, 0.4, 1) both;
+}
+@keyframes game-modal-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+
 /* Manual close: quick fade + slight drop */
 .wchip-exit-close {
   animation: wchip-exit-close 0.28s ease-out both;

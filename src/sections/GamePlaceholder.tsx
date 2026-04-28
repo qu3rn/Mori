@@ -1,4 +1,6 @@
+import { useState } from 'react'
 import SectionTitle from '@/components/ui/SectionTitle'
+import GameModal from '@/components/game/GameModal'
 
 const features = [
   'Procedurally generated geometric levels',
@@ -10,6 +12,8 @@ const features = [
 const stack = ['PixiJS', 'WebGL', 'React', 'TypeScript']
 
 export default function GamePlaceholder() {
+  const [modalOpen, setModalOpen] = useState(false)
+
   return (
     <section id="game" className="section">
       <div className="container">
@@ -83,12 +87,24 @@ export default function GamePlaceholder() {
                 <span className="text-xs font-mono text-zinc-500 tracking-wider">In development</span>
               </div>
 
-              {/* Centre: abstract geometric preview */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+              {/* Centre: geometric icon + Play button */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-6">
                 <GeometricIcon />
-                <p className="text-zinc-600 font-mono text-xs tracking-[0.3em] uppercase">
-                  Coming soon
-                </p>
+                <button
+                  onClick={() => setModalOpen(true)}
+                  aria-label="Play Void Protocol"
+                  className="group flex items-center gap-3 px-5 py-2.5
+                             border border-zinc-700 hover:border-accent/60
+                             text-zinc-500 hover:text-zinc-200
+                             font-mono text-xs tracking-[0.2em] uppercase
+                             transition-all duration-300"
+                >
+                  {/* Geometric play triangle */}
+                  <svg width="8" height="10" viewBox="0 0 8 10" aria-hidden="true" className="fill-current">
+                    <polygon points="0,0 8,5 0,10" />
+                  </svg>
+                  Play
+                </button>
               </div>
             </div>
 
@@ -98,6 +114,8 @@ export default function GamePlaceholder() {
           </div>
         </div>
       </div>
+
+      {modalOpen && <GameModal onClose={() => setModalOpen(false)} />}
     </section>
   )
 }
