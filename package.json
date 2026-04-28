@@ -32,6 +32,6 @@
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.1",
-    "void-protocol": "file:../Void-Protocol/void-protocol-1.0.0.tgz"
+    "void-protocol": "file:void-protocol-1.0.0.tgz"
   }
 }
